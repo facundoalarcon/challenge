@@ -25,7 +25,7 @@ const pgClient = new Pool({
 
 pgClient.on('connect', () => {
   pgClient
-  //
+  //.query('CREATE TABLE IF NOT EXISTS address (ip INT)')
     .query('CREATE TABLE IF NOT EXISTS address (ip INET)')
     .catch((err) => console.log(err));
 });
@@ -76,9 +76,9 @@ app.get('/values/test', (req, res) => {
 app.post('/values', async (req, res) => {
   const ip = req.body.ip;
 
-   if (parseInt(ip) > 40) {
-     return res.status(422).send('Bad ip');
-   }
+   //if (parseInt(ip) > 40) {
+   //  return res.status(422).send('Bad ip');
+   //}
 
   //redisClient.hset('values', ip, 'Nothing yet!');
   //redisPublisher.publish('insert', ip);
