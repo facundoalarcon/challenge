@@ -101,8 +101,12 @@ app.get('/values/missing', async (req, res) => {
 
   let strDb = arrDb.join('\n');
   
-  // result
-  res.send (arrIp.filter(n=>!strDb.includes(n)));
+  // result -> con esto muestra un array se podria devolver esto ya
+  let arrM = arrIp.filter(n=>!strDb.includes(n));
+  //res.send (arrIp.filter(n=>!strDb.includes(n)));
+  let strM = arrM.join('\n');
+  
+  res.send(strM);
 
 });
 

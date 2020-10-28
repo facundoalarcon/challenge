@@ -5,12 +5,14 @@ class ListIP extends Component {
   state = {
     seenIp: [],
     values: [],
+    missing: [],
     ip: '',
   };
 
   componentDidMount() {
     this.fetchValues();
     this.fetchIp();
+    this.fetchMissing();
   }
 
   async fetchValues() {
@@ -29,6 +31,14 @@ class ListIP extends Component {
       seenIp: seenIp.data,
     });
   }
+
+  async fetchMissing() {
+    const missing = await axios.get('/api/values/missing');
+    this.setState({
+      missing: missing.data,
+    });
+  }
+
 
   handleSubmit = async (event) => {
     event.preventDefault();
@@ -50,6 +60,10 @@ class ListIP extends Component {
     return this.state.values.map(({ ip }) => ip).join(' ');
   }
 
+  renderMissing() {
+    return this.state.missing;
+  }
+
   render() {
     return (
       <div>
@@ -67,6 +81,9 @@ class ListIP extends Component {
 
         <h4>IP saved:</h4>
         {this.renderValues()}
+
+        <h4>IP to Add:</h4>
+        {this.renderMissing()}
       </div>
     );
   }
