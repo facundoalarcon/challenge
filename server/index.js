@@ -30,6 +30,12 @@ pgClient.on('connect', () => {
     .catch((err) => console.log(err));
 });
 
+// webpage
+
+async function getTor() {
+  const response = await axios.get('https://www.dan.me.uk/torlist/?exit');
+  return (response.data);
+}  
 // Redis Client Setup
 //const redis = require('redis');
 //const redisClient = redis.createClient({
@@ -71,7 +77,35 @@ app.get('/values/test', (req, res) => {
     if (err) throw err;
     res.send(data);
   });
+  //res.send(content);
 });
+
+// missing ip 
+app.get('/values/missing', async (req, res) => {
+  
+  // Ip list (with txt) for testing
+  let listIp = fs.readFileSync('iplist.txt', 'utf8');
+  // Ip list (with const)
+  //let listIp = getTor();
+
+  let arrIp = listIp.trim().split("\n");
+  
+  // Db data
+  let jsonDb = await pgClient.query('SELECT * FROM address');
+  
+  let arrDb = []
+  
+  for(item of jsonDb.rows){
+     arrDb.push(item.ip);
+   }
+
+  let strDb = arrDb.join('\n');
+  
+  // result
+  res.send (arrIp.filter(n=>!strDb.includes(n)));
+
+});
+
 
 app.post('/values', async (req, res) => {
   const ip = req.body.ip;
