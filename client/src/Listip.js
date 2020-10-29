@@ -24,9 +24,7 @@ class ListIP extends Component {
   }
 
   async fetchIp() {
-    // const seenIp = await axios.get('/api/values/all');
-    //const seenIp = await axios.get('/api/values/tor');
-    const seenIp = await axios.get('/api/values/test');
+    const seenIp = await axios.get('/api/values/tor');
     this.setState({
       seenIp: seenIp.data,
     });

@@ -6,12 +6,13 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const axios = require ('axios');
 
+// for text list
+const request = require('request')
+const fs = require('fs');
+
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
-
-// eg data
-const fs = require('fs');
 
 // Postgres Client Setup
 const { Pool } = require('pg');
@@ -25,20 +26,12 @@ const pgClient = new Pool({
 
 pgClient.on('connect', () => {
   pgClient
-  //.query('CREATE TABLE IF NOT EXISTS address (ip INT)')
     .query('CREATE TABLE IF NOT EXISTS address (ip INET)')
     .catch((err) => console.log(err));
 });
 
-// webpage
-
-/* async function getTor() {
-  const response = await axios.get('https://www.dan.me.uk/torlist/?exit');
-  return (response.data);
-} */  
-// download
-const request = require('request')
-const download = (url, path, callback) => {
+// -download
+const downloadTorIp = (url, path, callback) => {
   request.head(url, (err, res, body) => {
     request(url)
       .pipe(fs.createWriteStream(path))
@@ -46,91 +39,61 @@ const download = (url, path, callback) => {
   })
 }
 
-// test download
-app.get('/lala', (req, res) => {
-  const url = 'https://google.com.ar'
-  const path = 'image.txt'
+const ipurl = 'https://www.dan.me.uk/torlist/?exit'
+//const ipurl = 'https://google.com.ar';
+//const ipurl = 'https://goosdsdaadsgle.com.ar';
+const ippath = 'iplist.txt';
 
-  download(url, path, () => {
-    res.send('Done!')
-  });
-
+downloadTorIp(ipurl, ippath, () => {
+  console.log('Tor IP downloaded!');
 });
 
+// download from get
 app.get('/values/download', (req, res) => {
-  const url = 'https://www.dan.me.uk/torlist/?exit'
-  const path = 'iplist2.txt'
+  const ipurl = 'https://www.dan.me.uk/torlist/?exit'
+  const ippath = 'iplist2.txt'
 
-  download(url, path, () => {
+  downloadTorIp(ipurl, ippath, () => {
     res.send('Done!')
   });
 
 });
-
-
-// Redis Client Setup
-//const redis = require('redis');
-//const redisClient = redis.createClient({
-//  host: keys.redisHost,
-//  port: keys.redisPort,
-//  retry_strategy: () => 1000,
-//});
-//const redisPublisher = redisClient.duplicate();
 
 // Express route handlers
-
-app.get('/', (req, res) => {
-  res.send('Hi');
-});
-
 app.get('/values/all', async (req, res) => {
   const values = await pgClient.query('SELECT * FROM address');
-
   res.send(values.rows);
 });
 
-//app.get('/values/current', async (req, res) => {
-//  redisClient.hgetall('values', (err, values) => {
-//    res.send(values);
-//  });
-//});
-
 // lista ip de tor, los resultados estan separados por espacio (mostrar bien luego en el frontend)
 // solo se puede usar cada media hora
-app.get('/values/tor', async (req, res) => {
+/* app.get('/values/tor', async (req, res) => {
     await axios.get('https://www.dan.me.uk/torlist/?exit')
       .then(response => res.send(response.data))
       .catch(error => console.log(error));
-});
+}); */
 
-// example data
-app.get('/values/test', (req, res) => {
+// text data
+app.get('/values/tor', (req, res) => {
   fs.readFile('iplist.txt', 'utf8', function(err, data) {
     if (err) throw err;
     res.send(data);
   });
-  //res.send(content);
 });
 
 // missing ip 
 app.get('/values/missing', async (req, res) => {
   
-  // Ip list (with txt) for testing
+  // Ip list from txt
   let listIp = fs.readFileSync('iplist.txt', 'utf8');
-  // Ip list (with const)
-  //let listIp = getTor();
-
   let arrIp = listIp.trim().split("\n");
   
   // Db data
   let jsonDb = await pgClient.query('SELECT * FROM address');
-  
   let arrDb = []
-  
   for(item of jsonDb.rows){
      arrDb.push(item.ip);
    }
-
   let strDb = arrDb.join('\n');
   
   // result -> con esto muestra un array se podria devolver esto ya
@@ -149,9 +112,6 @@ app.post('/values', async (req, res) => {
    //if (parseInt(ip) > 40) {
    //  return res.status(422).send('Bad ip');
    //}
-
-  //redisClient.hset('values', ip, 'Nothing yet!');
-  //redisPublisher.publish('insert', ip);
 
   pgClient.query('INSERT INTO address(ip) VALUES($1)', [ip]);
   res.send({ working: true });
