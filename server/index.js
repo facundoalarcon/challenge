@@ -32,10 +32,42 @@ pgClient.on('connect', () => {
 
 // webpage
 
-async function getTor() {
+/* async function getTor() {
   const response = await axios.get('https://www.dan.me.uk/torlist/?exit');
   return (response.data);
-}  
+} */  
+// download
+const request = require('request')
+const download = (url, path, callback) => {
+  request.head(url, (err, res, body) => {
+    request(url)
+      .pipe(fs.createWriteStream(path))
+      .on('close', callback)
+  })
+}
+
+// test download
+app.get('/lala', (req, res) => {
+  const url = 'https://google.com.ar'
+  const path = 'image.txt'
+
+  download(url, path, () => {
+    res.send('Done!')
+  });
+
+});
+
+app.get('/values/download', (req, res) => {
+  const url = 'https://www.dan.me.uk/torlist/?exit'
+  const path = 'iplist2.txt'
+
+  download(url, path, () => {
+    res.send('Done!')
+  });
+
+});
+
+
 // Redis Client Setup
 //const redis = require('redis');
 //const redisClient = redis.createClient({
