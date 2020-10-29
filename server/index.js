@@ -30,7 +30,7 @@ pgClient.on('connect', () => {
     .catch((err) => console.log(err));
 });
 
-// -download
+// download
 const downloadTorIp = (url, path, callback) => {
   request.head(url, (err, res, body) => {
     request(url)
