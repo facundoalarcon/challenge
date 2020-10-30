@@ -5,9 +5,9 @@
     "redis": "2.8.0",
     "cors": "2.8.4",
     "nodemon": "1.18.3",
-    "axios": "0.18.0",
     "fs": "*",
     "request": "*",
+    "https": "*",
     "body-parser": "*"
   },
   "scripts": {

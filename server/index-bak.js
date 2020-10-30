@@ -4,8 +4,10 @@ const keys = require('./keys');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const axios = require ('axios');
 
 // for text list
+const request = require('request')
 const fs = require('fs');
 
 const app = express();
@@ -29,37 +31,22 @@ pgClient.on('connect', () => {
 });
 
 // download
-const https = require('https');
-var options = {
-    //host: 'www.google.com',
-    //path: '/',
-    host: 'www.dan.me.uk',
-    path: '/torlist/?exit',
-    port: 443,
-    method: 'GET'
-};
+const downloadTorIp = (url, path, callback) => {
+  request.head(url, (err, res, body) => {
+    request(url)
+      .pipe(fs.createWriteStream(path))
+      .on('close', callback)
+  })
+}
 
-var req = https.request(options, (res) => {
-    res.setEncoding('utf8');
-    var content = '';
-    res.on('data', (chunk) => {
-      // chunk contains data read from the stream
-      // - save it to content
-      content += chunk;
-    });
+const ipurl = 'https://www.dan.me.uk/torlist/?exit'
+//const ipurl = 'https://google.com.ar';
+//const ipurl = 'https://goosdsdaadsgle.com.ar';
+const ippath = 'iplist.txt';
 
-    res.on('end', () => {
-      // 
-      if (!content.includes('Umm')) {
-        let writeStream = fs.createWriteStream('iplist.txt');
-        writeStream.write(content);
-      } else {
-        console.log(content);
-      }      
-    });
+downloadTorIp(ipurl, ippath, () => {
+  console.log('Tor IP downloaded!');
 });
-
-req.end();
 
 // download from get
 app.get('/values/download', (req, res) => {
