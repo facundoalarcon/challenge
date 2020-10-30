@@ -49,7 +49,7 @@ var req = https.request(options, (res) => {
     });
 
     res.on('end', () => {
-      // 
+      // verifica si no devuelve  Umm... You can only fetch the data every 30 minutes - sorry antes de escribir
       if (!content.includes('Umm')) {
         let writeStream = fs.createWriteStream('iplist.txt');
         writeStream.write(content);
@@ -77,14 +77,6 @@ app.get('/values/all', async (req, res) => {
   const values = await pgClient.query('SELECT * FROM address');
   res.send(values.rows);
 });
-
-// lista ip de tor, los resultados estan separados por espacio (mostrar bien luego en el frontend)
-// solo se puede usar cada media hora
-/* app.get('/values/tor', async (req, res) => {
-    await axios.get('https://www.dan.me.uk/torlist/?exit')
-      .then(response => res.send(response.data))
-      .catch(error => console.log(error));
-}); */
 
 // text data
 app.get('/values/tor', (req, res) => {
