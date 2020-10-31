@@ -17,7 +17,6 @@ class ListIP extends Component {
 
   async fetchValues() {
     const values = await axios.get('/api/values/all');
-    //const values = await axios.get('/api/values/all');
     this.setState({ 
       values: values.data
     });
@@ -74,7 +73,7 @@ class ListIP extends Component {
           <button>Submit</button>
         </form>
 
-        <h4>Ip I have seen from source:</h4>
+        <h4>IP from source:</h4>
         {this.renderSeenIp()}
 
         <h4>IP saved:</h4>

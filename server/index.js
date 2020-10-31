@@ -115,7 +115,16 @@ const rx = /((^\s*((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]
 
 app.post('/values', async (req, res) => {
   const ip = req.body.ip;
+  
+  // check DB
+  const query = await pgClient.query('SELECT ip FROM address WHERE ip = $1', [ip]);
+  const cant = query.rowCount;
 
+  if(cant !== 0) {
+    return res.status(422).send('Already exist');
+  }
+  
+  //check reg ex
   if (!rx.test(ip)) {
     return res.status(422).send('Bad ip');
   }
