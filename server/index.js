@@ -31,16 +31,16 @@ pgClient.on('connect', () => {
 
 // download
 const https = require('https');
-var options = {
+const options = {
     host: 'www.dan.me.uk',
     path: '/torlist/?exit',
     port: 443,
     method: 'GET'
 };
 
-var req = https.request(options, (res) => {
+const req = https.request(options, (res) => {
     res.setEncoding('utf8');
-    var content = '';
+    let content = '';
     res.on('data', (chunk) => {
       // chunk contains data read from the stream
       // - save it to content
@@ -80,7 +80,7 @@ app.get('/values/all', async (req, res) => {
 
 // text data
 app.get('/values/tor', (req, res) => {
-  fs.readFile('iplist.txt', 'utf8', function(err, data) {
+  fs.readFile('iplist.txt', 'utf8', (err, data) => {
     if (err) throw err;
     res.send(data);
   });
