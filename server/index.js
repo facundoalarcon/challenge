@@ -50,7 +50,7 @@ const req = https.request(options, (res) => {
     res.on('end', () => {
       // verifica si no devuelve  Umm... You can only fetch the data every 30 minutes - sorry antes de escribir
       if (!content.includes('Umm')) {
-        let writeStream = fs.createWriteStream('iplist.txt');
+        let writeStream = fs.createWriteStream('./iplist.txt');
         writeStream.write(content);
         console.log('IP downloaded!');
       } else {
@@ -80,7 +80,7 @@ app.get('/values/all', async (req, res) => {
 
 // text data
 app.get('/values/tor', (req, res) => {
-  fs.readFile('iplist.txt', 'utf8', (err, data) => {
+  fs.readFile('./iplist.txt', 'utf8', (err, data) => {
     if (err) throw err;
     res.send(data);
   });
@@ -90,7 +90,7 @@ app.get('/values/tor', (req, res) => {
 app.get('/values/missing', async (req, res) => {
   
   // Ip list from txt
-  let listIp = fs.readFileSync('iplist.txt', 'utf8');
+  let listIp = fs.readFileSync('./iplist.txt', 'utf8');
   let arrIp = listIp.trim().split("\n");
   
   // Db data
