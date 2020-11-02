@@ -9,9 +9,9 @@ script:
   - docker run -e CI=true facundoalarcon/react-test npm test
 
 after_success:
-  - docker build -t facundoalarcon/multi-client ./client
-  - docker build -t facundoalarcon/multi-nginx ./nginx
-  - docker build -t facundoalarcon/multi-server ./server
+  - docker build -t ffacundoalarcon/xdsawmwa-client ./client
+  - docker build -t facundoalarcon/xdsawmwa-nginx ./nginx
+  - docker build -t facundoalarcon/xdsawmwa-server ./server
   # Log in to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Take those images and push them docker hub
