@@ -9,7 +9,7 @@ script:
   - docker run -e CI=true facundoalarcon/react-test npm test
 
 after_success:
-  - docker build -t ffacundoalarcon/xdsawmwa-client ./client
+  - docker build -t facundoalarcon/xdsawmwa-client ./client
   - docker build -t facundoalarcon/xdsawmwa-nginx ./nginx
   - docker build -t facundoalarcon/xdsawmwa-server ./server
   # Log in to the docker CLI
