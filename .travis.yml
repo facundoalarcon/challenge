@@ -21,8 +21,8 @@ after_success:
 deploy:
   provider: elasticbeanstalk
   region: 'us-east-1'
-  app: 'challange-melli'
-  env: 'ChallangeMelli-env'
+  app: 'challenge-ml'
+  env: 'ChallengeMl-env'
   bucket_name: 'elasticbeanstalk-us-east-1-863537803557'
   bucket_path: 'docker-ml'
   on:
