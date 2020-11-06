@@ -61,17 +61,6 @@ const req = https.request(options, (res) => {
 
 req.end();
 
-// download from get
-app.get('/values/download', (req, res) => {
-  const ipurl = 'https://www.dan.me.uk/torlist/?exit'
-  const ippath = 'iplist2.txt'
-
-  downloadTorIp(ipurl, ippath, () => {
-    res.send('Done!')
-  });
-
-});
-
 // Express route handlers
 app.get('/values/all', async (req, res) => {
   const values = await pgClient.query('SELECT * FROM address');
